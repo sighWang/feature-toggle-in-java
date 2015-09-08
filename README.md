@@ -77,7 +77,7 @@ EMAIL_CONFIRMATION=true
        <url-pattern>/*</url-pattern>
    </filter-mapping>
 ```
-### Now we can use <togglz:feature> in JSP file
+### Now we can use `<togglz:feature>` in JSP file
 * First, we need to add togglz tags to jsp file
 ```html
 <%@ taglib prefix="togglz" uri="http://togglz.org/taglib"%>
@@ -92,7 +92,7 @@ EMAIL_CONFIRMATION=true
     </togglz:feature>
 ```
 
-## How to use ToggledFeatures in Unit Test
+## How to use togglz in Unit Test
 ```java
 public class ToggledFeaturesTest {
 
