@@ -127,6 +127,6 @@ public class ToggledFeaturesTest {
         <url-pattern>/togglz/*</url-pattern>
     </servlet-mapping>
 ```
-* Then login with admin role and open http://localhost:8080/togglz/
+* Then login with admin role and open (http://localhost:8080/togglz/
 * Now we can use this page to toggle feature
   ![Image of Togglz console](https://github.com/sighWang/feature-toggle-in-java/blob/master/togglz-console.png)
