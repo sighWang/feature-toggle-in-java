@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Feature-toggle-in-java by sighWang</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Feature-toggle-in-java</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/sighWang/feature-toggle-in-java" class="btn">View on GitHub</a>
+      <a href="https://github.com/sighWang/feature-toggle-in-java/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sighWang/feature-toggle-in-java/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="feature-toggle-in-java" class="anchor" href="#feature-toggle-in-java" aria-hidden="true"><span class="octicon octicon-link"></span></a>Feature Toggle in Java</h1>
+
+<p>In our project, we choose <a href="http://www.togglz.org/">togglz</a> as a framework for feature toggle.</p>
+
+<h2>
+<a id="import-togglz-in-project" class="anchor" href="#import-togglz-in-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>import togglz in project</h2>
+
+<p>We need to add these dependencies in project file <code>build.gradle</code></p>
+
+<div class="highlight highlight-shell"><pre>  compile <span class="pl-s"><span class="pl-pds">'</span>org.togglz:togglz-core:2.2.0.Final<span class="pl-pds">'</span></span>
+  compile <span class="pl-s"><span class="pl-pds">'</span>org.togglz:togglz-servlet:2.2.0.Final<span class="pl-pds">'</span></span>
+  compile <span class="pl-s"><span class="pl-pds">'</span>org.togglz:togglz-jsp:2.2.0.Final<span class="pl-pds">'</span></span> //support jsp
+  compile <span class="pl-s"><span class="pl-pds">'</span>org.togglz:togglz-console:2.2.0.Final<span class="pl-pds">'</span></span>  //support togglz console
+  compile <span class="pl-s"><span class="pl-pds">'</span>org.togglz:togglz-spring-security:2.2.0.Final<span class="pl-pds">'</span></span> //support user authentication
+
+  testCompile <span class="pl-s"><span class="pl-pds">'</span>org.togglz:togglz-testing:2.2.0.Final<span class="pl-pds">'</span></span> //support togglz <span class="pl-c1">test</span>
+  testCompile <span class="pl-s"><span class="pl-pds">'</span>org.togglz:togglz-junit:2.2.0.Final<span class="pl-pds">'</span></span> //support togglz <span class="pl-c1">test</span></pre></div>
+
+<h2>
+<a id="config-togglz-in-project" class="anchor" href="#config-togglz-in-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>config togglz in project</h2>
+
+<h3>
+<a id="add-a-new-class-toggledfeature-implements-feature" class="anchor" href="#add-a-new-class-toggledfeature-implements-feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add a new class <code>ToggledFeature</code> <code>implements Feature</code>
+</h3>
+
+<div class="highlight highlight-java"><pre><span class="pl-k">public</span> <span class="pl-k">enum</span> <span class="pl-en">ToggledFeature</span> <span class="pl-k">implements</span> <span class="pl-e">Feature</span> {
+    <span class="pl-k">@Label</span>(<span class="pl-s"><span class="pl-pds">"</span>CONFIRM_PASSWORD<span class="pl-pds">"</span></span>)
+    <span class="pl-c1">CONFIRM_PASSWORD</span>,
+
+    <span class="pl-k">@Label</span>(<span class="pl-s"><span class="pl-pds">"</span>ADDRESS<span class="pl-pds">"</span></span>)
+    <span class="pl-c1">ADDRESS</span>,
+
+    <span class="pl-k">@Label</span>(<span class="pl-s"><span class="pl-pds">"</span>AGREE_TERMS<span class="pl-pds">"</span></span>)
+    <span class="pl-c1">AGREE_TERMS</span>,
+
+    <span class="pl-k">@Label</span>(<span class="pl-s"><span class="pl-pds">"</span>EMAIL_CONFIRMATION<span class="pl-pds">"</span></span>)
+    <span class="pl-c1">EMAIL_CONFIRMATION</span>;
+
+    <span class="pl-k">public</span> <span class="pl-k">boolean</span> <span class="pl-en">isActive</span>() {
+        <span class="pl-k">return</span> <span class="pl-smi">FeatureContext</span><span class="pl-k">.</span>getFeatureManager()<span class="pl-k">.</span>isActive(<span class="pl-v">this</span>);
+    }
+}</pre></div>
+
+<h3>
+<a id="add-a-new-class-toggledfeatureconfiguration--implements-togglzconfig" class="anchor" href="#add-a-new-class-toggledfeatureconfiguration--implements-togglzconfig" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add a new class <code>ToggledFeatureConfiguration</code>  <code>implements TogglzConfig</code>
+</h3>
+
+<div class="highlight highlight-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">ToggledFeatureConfiguration</span> <span class="pl-k">implements</span> <span class="pl-e">TogglzConfig</span>{
+    <span class="pl-k">public</span> <span class="pl-k">Class&lt;? extends <span class="pl-smi">Feature</span>&gt;</span> <span class="pl-en">getFeatureClass</span>() {
+        <span class="pl-k">return</span> <span class="pl-smi">ToggledFeature</span><span class="pl-k">.</span>class;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">StateRepository</span> <span class="pl-en">getStateRepository</span>() {
+        <span class="pl-smi">ClassLoader</span> classLoader <span class="pl-k">=</span> getClass()<span class="pl-k">.</span>getClassLoader();
+        <span class="pl-smi">File</span> file <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">File</span>(classLoader<span class="pl-k">.</span>getResource(<span class="pl-s"><span class="pl-pds">"</span>features.properties<span class="pl-pds">"</span></span>)<span class="pl-k">.</span>getFile());
+        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-smi">FileBasedStateRepository</span>(file);
+    }
+
+    <span class="pl-k">@Override</span>
+    <span class="pl-k">public</span> <span class="pl-smi">UserProvider</span> <span class="pl-en">getUserProvider</span>() {
+        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-smi">SpringSecurityUserProvider</span>(<span class="pl-s"><span class="pl-pds">"</span>ROLE_ADMIN<span class="pl-pds">"</span></span>) {
+        };
+    }
+
+}</pre></div>
+
+<h3>
+<a id="add-a-featurespeoperties-file-to-set-togglz-status" class="anchor" href="#add-a-featurespeoperties-file-to-set-togglz-status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add a <code>features.peoperties</code> file to set togglz status</h3>
+
+<div class="highlight highlight-shell"><pre>CONFIRM_PASSWORD=<span class="pl-c1">true</span>
+ADDRESS=<span class="pl-c1">true</span>
+AGREE_TERMS=<span class="pl-c1">true</span>
+EMAIL_CONFIRMATION=<span class="pl-c1">true</span></pre></div>
+
+<h3>
+<a id="then-config-togglz-in-webxml" class="anchor" href="#then-config-togglz-in-webxml" aria-hidden="true"><span class="octicon octicon-link"></span></a>Then config togglz in <code>web.xml</code>
+</h3>
+
+<div class="highlight highlight-xml"><pre>&lt;<span class="pl-ent">context-param</span>&gt;
+       &lt;<span class="pl-ent">param-name</span>&gt;org.togglz.core.manager.TogglzConfig&lt;/<span class="pl-ent">param-name</span>&gt;
+       &lt;<span class="pl-ent">param-value</span>&gt;com.trailblazers.freewheelers.utils.ToggledFeature.ToggledFeatureConfiguration&lt;/<span class="pl-ent">param-value</span>&gt;
+   &lt;/<span class="pl-ent">context-param</span>&gt;
+
+   &lt;<span class="pl-ent">filter</span>&gt;
+       &lt;<span class="pl-ent">filter-name</span>&gt;TogglzFilter&lt;/<span class="pl-ent">filter-name</span>&gt;
+       &lt;<span class="pl-ent">filter-class</span>&gt;org.togglz.servlet.TogglzFilter&lt;/<span class="pl-ent">filter-class</span>&gt;
+   &lt;/<span class="pl-ent">filter</span>&gt;
+   &lt;<span class="pl-ent">filter-mapping</span>&gt;
+       &lt;<span class="pl-ent">filter-name</span>&gt;TogglzFilter&lt;/<span class="pl-ent">filter-name</span>&gt;
+       &lt;<span class="pl-ent">url-pattern</span>&gt;/*&lt;/<span class="pl-ent">url-pattern</span>&gt;
+   &lt;/<span class="pl-ent">filter-mapping</span>&gt;</pre></div>
+
+<h3>
+<a id="now-we-can-use-togglzfeature-in-jsp-file" class="anchor" href="#now-we-can-use-togglzfeature-in-jsp-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now we can use togglz:feature in JSP file</h3>
+
+<ul>
+<li>First, we need to add togglz tags to jsp file</li>
+</ul>
+
+<div class="highlight highlight-html"><pre>&lt;%@ taglib prefix="togglz" uri="http://togglz.org/taglib"%&gt;</pre></div>
+
+<ul>
+<li>Then we can use togglz to hide elements</li>
+</ul>
+
+<div class="highlight highlight-html"><pre>    &lt;<span class="pl-ent">togglz:feature</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>AGREE_TERMS<span class="pl-pds">"</span></span>&gt;
+        &lt;<span class="pl-ent">div</span>&gt;
+
+        &lt;/<span class="pl-ent">div</span>&gt;
+    &lt;/<span class="pl-ent">togglz:feature</span>&gt;</pre></div>
+
+<h2>
+<a id="how-to-use-toggledfeatures-in-unit-test" class="anchor" href="#how-to-use-toggledfeatures-in-unit-test" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use ToggledFeatures in Unit Test</h2>
+
+<div class="highlight highlight-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">ToggledFeaturesTest</span> {
+
+    <span class="pl-k">@Rule</span>
+    <span class="pl-k">public</span> <span class="pl-smi">TogglzRule</span> togglzRule <span class="pl-k">=</span> <span class="pl-smi">TogglzRule</span><span class="pl-k">.</span>allEnabled(<span class="pl-smi">ToggledFeature</span><span class="pl-k">.</span>class);
+
+    <span class="pl-k">@Test</span>
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">testToggleFeature</span>() {
+
+        assertTrue(<span class="pl-smi">ToggledFeature</span><span class="pl-c1"><span class="pl-k">.</span>CONFIRM_PASSWORD</span><span class="pl-k">.</span>isActive());
+
+        togglzRule<span class="pl-k">.</span>disable(<span class="pl-smi">ToggledFeature</span><span class="pl-c1"><span class="pl-k">.</span>CONFIRM_PASSWORD</span>);
+        assertFalse(<span class="pl-smi">ToggledFeature</span><span class="pl-c1"><span class="pl-k">.</span>CONFIRM_PASSWORD</span><span class="pl-k">.</span>isActive());
+    }
+
+    <span class="pl-k">@After</span>
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">tearDown</span>() <span class="pl-k">throws</span> <span class="pl-smi">Exception</span> {
+        togglzRule<span class="pl-k">.</span>disableAll();
+    }
+}</pre></div>
+
+<h2>
+<a id="how-to-show-toggle-console-in-browser" class="anchor" href="#how-to-show-toggle-console-in-browser" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to show toggle console in browser</h2>
+
+<ul>
+<li>First, we need to add toggle servlet in <code>web.xml</code>
+</li>
+</ul>
+
+<div class="highlight highlight-xml"><pre>    &lt;<span class="pl-ent">servlet</span>&gt;
+        &lt;<span class="pl-ent">servlet-name</span>&gt;TogglzConsoleServlet&lt;/<span class="pl-ent">servlet-name</span>&gt;
+        &lt;<span class="pl-ent">servlet-class</span>&gt;org.togglz.console.TogglzConsoleServlet&lt;/<span class="pl-ent">servlet-class</span>&gt;
+    &lt;/<span class="pl-ent">servlet</span>&gt;
+    &lt;<span class="pl-ent">servlet-mapping</span>&gt;
+        &lt;<span class="pl-ent">servlet-name</span>&gt;TogglzConsoleServlet&lt;/<span class="pl-ent">servlet-name</span>&gt;
+        &lt;<span class="pl-ent">url-pattern</span>&gt;/togglz/*&lt;/<span class="pl-ent">url-pattern</span>&gt;
+    &lt;/<span class="pl-ent">servlet-mapping</span>&gt;</pre></div>
+
+<ul>
+<li>Then login with admin role and open http://localhost:8080/togglz/</li>
+<li>Now we can use this page to toggle feature</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sighWang/feature-toggle-in-java">Feature-toggle-in-java</a> is maintained by <a href="https://github.com/sighWang">sighWang</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
