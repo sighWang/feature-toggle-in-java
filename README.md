@@ -13,7 +13,7 @@ We need to add these dependencies in project file `build.gradle`
   testCompile 'org.togglz:togglz-junit:2.2.0.Final' //support togglz test
 ```
 ## config togglz in project
-### Add a new class `ToggledFeature` `implements Feature`
+### Add a new class `ToggledFeature` implements Feature
 ```java
 public enum ToggledFeature implements Feature {
     @Label("CONFIRM_PASSWORD")
@@ -33,7 +33,7 @@ public enum ToggledFeature implements Feature {
     }
 }
 ```
-### Add a new class `ToggledFeatureConfiguration`  `implements TogglzConfig`
+### Add a new class `ToggledFeatureConfiguration`  implements TogglzConfig
 ```java
 public class ToggledFeatureConfiguration implements TogglzConfig{
     public Class<? extends Feature> getFeatureClass() {
