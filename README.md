@@ -1,19 +1,19 @@
 # Feature Toggle in Java
-we choose [togglz](http://www.togglz.org/) as a feature toggle  framework in our project.
+In our project, we choose [togglz](http://www.togglz.org/) as a framework for feature toggle.
 ## import togglz in project
-add these dependencies in project `build.gradle`
+We need to add these dependencies in project file `build.gradle`
 ```shell
   compile 'org.togglz:togglz-core:2.2.0.Final'
   compile 'org.togglz:togglz-servlet:2.2.0.Final'
-  compile 'org.togglz:togglz-jsp:2.2.0.Final' //suppert jsp
-  compile 'org.togglz:togglz-console:2.2.0.Final'  // suppert togglz console
-  compile 'org.togglz:togglz-spring-security:2.2.0.Final' // suppert user authentication
+  compile 'org.togglz:togglz-jsp:2.2.0.Final' //support jsp
+  compile 'org.togglz:togglz-console:2.2.0.Final'  //support togglz console
+  compile 'org.togglz:togglz-spring-security:2.2.0.Final' //support user authentication
 
-  testCompile 'org.togglz:togglz-testing:2.2.0.Final' //suppert togglz test
-  testCompile 'org.togglz:togglz-junit:2.2.0.Final' //suppert togglz test
+  testCompile 'org.togglz:togglz-testing:2.2.0.Final' //support togglz test
+  testCompile 'org.togglz:togglz-junit:2.2.0.Final' //support togglz test
 ```
 ## config togglz in project
-### new class `ToggledFeature`  implements Feature
+### Add a new class `ToggledFeature` `implements Feature`
 ```java
 public enum ToggledFeature implements Feature {
     @Label("CONFIRM_PASSWORD")
@@ -33,7 +33,7 @@ public enum ToggledFeature implements Feature {
     }
 }
 ```
-### new class `ToggledFeatureConfiguration` implements TogglzConfig
+### Add a new class `ToggledFeatureConfiguration`  `implements TogglzConfig`
 ```java
 public class ToggledFeatureConfiguration implements TogglzConfig{
     public Class<? extends Feature> getFeatureClass() {
@@ -54,14 +54,14 @@ public class ToggledFeatureConfiguration implements TogglzConfig{
 
 }
 ```
-### new a `features.peoperties` file to set togglz status
+### Add a `features.peoperties` file to set togglz status
 ```shell
 CONFIRM_PASSWORD=true
 ADDRESS=true
 AGREE_TERMS=true
 EMAIL_CONFIRMATION=true
 ```
-### config togglz in `web.xml`
+### Then config togglz in `web.xml`
 ```xml
 <context-param>
        <param-name>org.togglz.core.manager.TogglzConfig</param-name>
@@ -77,13 +77,13 @@ EMAIL_CONFIRMATION=true
        <url-pattern>/*</url-pattern>
    </filter-mapping>
 ```
-### use <togglz:feature> in JSP file
-* add togglz tag to jsp file
+### Now we can use <togglz:feature> in JSP file
+* First, we need to add togglz tags to jsp file
 ```html
 <%@ taglib prefix="togglz" uri="http://togglz.org/taglib"%>
 ```
 
-* use togglz to hide elements
+* Then we can use togglz to hide elements
 ```html
     <togglz:feature name="AGREE_TERMS">
         <div>
@@ -92,7 +92,7 @@ EMAIL_CONFIRMATION=true
     </togglz:feature>
 ```
 
-## togglz test
+## How to use ToggledFeatures in Unit Test
 ```java
 public class ToggledFeaturesTest {
 
@@ -115,8 +115,8 @@ public class ToggledFeaturesTest {
 }
 ```
 
-## toggle console
-* add toggle servlet in `web.xml`
+## How to show toggle console in browser
+* First, we need to add toggle servlet in `web.xml`
 ```xml
     <servlet>
         <servlet-name>TogglzConsoleServlet</servlet-name>
@@ -127,4 +127,5 @@ public class ToggledFeaturesTest {
         <url-pattern>/togglz/*</url-pattern>
     </servlet-mapping>
 ```
-* login with admin role and open http://localhost:8080/togglz/
+* Then login with admin role and open http://localhost:8080/togglz/
+* Now we can use this page to toggle feature
