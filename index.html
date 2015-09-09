@@ -42,8 +42,7 @@
 <a id="config-togglz-in-project" class="anchor" href="#config-togglz-in-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>config togglz in project</h2>
 
 <h3>
-<a id="add-a-new-class-toggledfeature-implements-feature" class="anchor" href="#add-a-new-class-toggledfeature-implements-feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add a new class <code>ToggledFeature</code> <code>implements Feature</code>
-</h3>
+<a id="add-a-new-class-toggledfeature-implements-feature" class="anchor" href="#add-a-new-class-toggledfeature-implements-feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add a new class <code>ToggledFeature</code> implements Feature</h3>
 
 <div class="highlight highlight-java"><pre><span class="pl-k">public</span> <span class="pl-k">enum</span> <span class="pl-en">ToggledFeature</span> <span class="pl-k">implements</span> <span class="pl-e">Feature</span> {
     <span class="pl-k">@Label</span>(<span class="pl-s"><span class="pl-pds">"</span>CONFIRM_PASSWORD<span class="pl-pds">"</span></span>)
@@ -64,8 +63,7 @@
 }</pre></div>
 
 <h3>
-<a id="add-a-new-class-toggledfeatureconfiguration--implements-togglzconfig" class="anchor" href="#add-a-new-class-toggledfeatureconfiguration--implements-togglzconfig" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add a new class <code>ToggledFeatureConfiguration</code>  <code>implements TogglzConfig</code>
-</h3>
+<a id="add-a-new-class-toggledfeatureconfiguration--implements-togglzconfig" class="anchor" href="#add-a-new-class-toggledfeatureconfiguration--implements-togglzconfig" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add a new class <code>ToggledFeatureConfiguration</code>  implements TogglzConfig</h3>
 
 <div class="highlight highlight-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">ToggledFeatureConfiguration</span> <span class="pl-k">implements</span> <span class="pl-e">TogglzConfig</span>{
     <span class="pl-k">public</span> <span class="pl-k">Class&lt;? extends <span class="pl-smi">Feature</span>&gt;</span> <span class="pl-en">getFeatureClass</span>() {
@@ -113,7 +111,7 @@ EMAIL_CONFIRMATION=<span class="pl-c1">true</span></pre></div>
    &lt;/<span class="pl-ent">filter-mapping</span>&gt;</pre></div>
 
 <h3>
-<a id="now-we-can-use-togglzfeature-in-jsp-file" class="anchor" href="#now-we-can-use-togglzfeature-in-jsp-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now we can use togglz:feature in JSP file</h3>
+<a id="now-we-can-use-togglzfeature-in-jsp-file" class="anchor" href="#now-we-can-use-togglzfeature-in-jsp-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now we can use <code>&lt;togglz:feature&gt;</code> in JSP file</h3>
 
 <ul>
 <li>First, we need to add togglz tags to jsp file</li>
@@ -132,7 +130,7 @@ EMAIL_CONFIRMATION=<span class="pl-c1">true</span></pre></div>
     &lt;/<span class="pl-ent">togglz:feature</span>&gt;</pre></div>
 
 <h2>
-<a id="how-to-use-toggledfeatures-in-unit-test" class="anchor" href="#how-to-use-toggledfeatures-in-unit-test" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use ToggledFeatures in Unit Test</h2>
+<a id="how-to-use-togglz-in-unit-test" class="anchor" href="#how-to-use-togglz-in-unit-test" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use togglz in Unit Test</h2>
 
 <div class="highlight highlight-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">ToggledFeaturesTest</span> {
 
@@ -172,8 +170,9 @@ EMAIL_CONFIRMATION=<span class="pl-c1">true</span></pre></div>
     &lt;/<span class="pl-ent">servlet-mapping</span>&gt;</pre></div>
 
 <ul>
-<li>Then login with admin role and open http://localhost:8080/togglz/</li>
-<li>Now we can use this page to toggle feature</li>
+<li><p>Then login with admin role and open <a href="http://localhost:8080/togglz/">http://localhost:8080/togglz/</a></p></li>
+<li><p>Now we can use this page to toggle feature
+<img src="https://github.com/sighWang/feature-toggle-in-java/blob/master/togglz-console.png" alt="Image of Togglz console"></p></li>
 </ul>
 
       <footer class="site-footer">
